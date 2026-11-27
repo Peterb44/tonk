@@ -25,17 +25,6 @@ internal enum class SettingsPage(
     /** False for pages that live inside a hub page (Coding) instead of the settings home. */
     val onHome: Boolean = true,
 ) {
-    LEARN(
-        R.string.learn_title, R.string.learn_description, R.string.learn_group,
-        "learn tutorial guide help study getting started how to android harness features instructions",
-    ),
-    ASSISTANT(
-        R.string.assistant_settings_title,
-        R.string.assistant_settings_page_desc,
-        R.string.assistant_settings_group,
-        "digital assistant app default assistant overlay floating panel over other apps long press power home button corner swipe " +
-            "screen read screenshot ask about screen assist anywhere",
-    ),
     LANGUAGE(
         R.string.settings_page_language_title,
         R.string.settings_page_language_desc,
@@ -302,8 +291,6 @@ internal data class SettingsSearchEntry(
  * data and help pages, which most people open rarely.
  */
 internal val settingsHomePages = listOf(
-    SettingsPage.LEARN,
-    SettingsPage.ASSISTANT,
     SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.LOCAL_MODELS, SettingsPage.NINE_ROUTER,
     SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY, SettingsPage.VOICE, SettingsPage.LIVE_MODE,
     SettingsPage.SEARCH, SettingsPage.MCP, SettingsPage.GITHUB, SettingsPage.TELEGRAM,
@@ -331,9 +318,9 @@ private val homeSettingsEntries = settingsHomePages.map { page ->
 }
 
 /** All pages stay searchable, including the ones reached through the Coding hub. */
-private val searchableSettingsEntries = SettingsPage.entries.map { page ->
-    SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true)
-}
+private val searchableSettingsEntries = SettingsPage.entries
+    .filterNot { it == SettingsPage.LEARN || it == SettingsPage.ASSISTANT }
+    .map { page -> SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true) }
 
 /** Every searchable entry: each page, then each setting inside one. */
 internal val allSettingsEntries: List<SettingsSearchEntry> by lazy { searchableSettingsEntries + settingsControlEntries }
