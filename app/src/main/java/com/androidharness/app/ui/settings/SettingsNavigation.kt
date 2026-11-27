@@ -309,14 +309,26 @@ internal data class SettingsSearchEntry(
  * (models), what you touch daily (assistant, integrations, look), then device,
  * data and help pages, which most people open rarely.
  */
+// These pages are intentionally hidden from Settings home and Settings search.
+// Their implementation remains in the project so existing app services and stored data
+// are not removed as a side effect of simplifying the settings menu.
+private val hiddenSettingsPages = setOf(
+    SettingsPage.STORAGE,
+    SettingsPage.SYNC,
+    SettingsPage.FTP_SERVER,
+    SettingsPage.USAGE,
+    SettingsPage.PROVIDER_DEBUG,
+    SettingsPage.SETUP,
+)
+
 internal val settingsHomePages = listOf(
     SettingsPage.MODELS, SettingsPage.NINE_ROUTER,
     SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY,
     SettingsPage.SEARCH, SettingsPage.MCP, SettingsPage.GITHUB, SettingsPage.TELEGRAM,
     SettingsPage.APPEARANCE, SettingsPage.LANGUAGE,
-    SettingsPage.BACKGROUND, SettingsPage.STORAGE,
-    SettingsPage.BACKUP, SettingsPage.SYNC, SettingsPage.FTP_SERVER, SettingsPage.USAGE,
-    SettingsPage.TROUBLESHOOTING, SettingsPage.PROVIDER_DEBUG, SettingsPage.SETUP, SettingsPage.UPDATES, SettingsPage.ABOUT,
+    SettingsPage.BACKGROUND,
+    SettingsPage.BACKUP,
+    SettingsPage.TROUBLESHOOTING, SettingsPage.UPDATES, SettingsPage.ABOUT,
 )
 
 /** Results grouped under their page's group, in the order the groups first appear. */
@@ -338,11 +350,13 @@ private val homeSettingsEntries = settingsHomePages.map { page ->
 
 /** All pages stay searchable, including the ones reached through the Coding hub. */
 private val searchableSettingsEntries = SettingsPage.entries
-    .filterNot { it in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.RUMBLE, SettingsPage.PRIVACY) }
+    .filterNot { it in hiddenSettingsPages || it in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.RUMBLE, SettingsPage.PRIVACY) }
     .map { page -> SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true) }
 
 /** Every searchable entry: each page, then each setting inside one. */
-internal val allSettingsEntries: List<SettingsSearchEntry> by lazy { searchableSettingsEntries + settingsControlEntries }
+internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
+    searchableSettingsEntries + settingsControlEntries.filterNot { it.page in hiddenSettingsPages }
+}
 
 /**
  * Ranked search over [entries]. Titles and descriptions are resolved through
