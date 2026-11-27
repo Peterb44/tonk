@@ -15,8 +15,8 @@ class SettingsNavigationTest {
     }
 
     @Test
-    fun `storage is searchable and supports a direct link`() {
-        assertEquals(listOf(SettingsPage.STORAGE), matchingSettingsPages("cleanup disk", settingsTestStrings()))
+    fun `storage is hidden from settings search but keeps its internal deep link`() {
+        assertTrue(matchingSettingsPages("cleanup disk", settingsTestStrings()).isEmpty())
         assertEquals(SettingsPage.STORAGE, settingsDeepLink("storage"))
     }
 
