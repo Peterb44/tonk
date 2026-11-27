@@ -45,7 +45,7 @@ android {
     namespace = "com.androidharness.app"
     // The in-app picker must be able to switch languages without a Play download.
     bundle { language { enableSplit = false } }
-    compileSdk = 36
+    compileSdk = 37
     if (hasNdk) {
         ndkVersion = pinnedNdk
         externalNativeBuild {
