@@ -209,50 +209,6 @@ internal fun MainHeader(
                         }
                         DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                             if (!conversation.isChat) {
-                                WorkspaceMenuEntries { menu = false }
-                                DropdownMenuItem(
-                                    text = { Text("GitHub") }, enabled = canOpenGitHub,
-                                    leadingIcon = { Icon(painterResource(R.drawable.ic_github), null, Modifier.size(18.dp)) },
-                                    onClick = { menu = false; onOpenGitHub() },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(if (mode == AgentMode.PLAN && !dualPlanning) uiContext.getString(R.string.ui_act_mode) else uiContext.getString(R.string.ui_plan_mode)) },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Outlined.EditNote,
-                                            contentDescription = null,
-                                            tint = if (mode == AgentMode.PLAN && !dualPlanning) scheme.primary else scheme.onSurfaceVariant,
-                                        )
-                                    },
-                                    trailingIcon = {
-                                        if (mode == AgentMode.PLAN && !dualPlanning) {
-                                            Icon(Icons.Filled.Check, contentDescription = uiContext.getString(R.string.settings_headers_enabled), tint = scheme.primary)
-                                        }
-                                    },
-                                    onClick = {
-                                        menu = false
-                                        onSetMode(if (mode == AgentMode.PLAN && !dualPlanning) AgentMode.ACT else AgentMode.PLAN)
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(uiContext.getString(R.string.ui_dual_planning)) },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Outlined.ForkRight,
-                                            contentDescription = null,
-                                            tint = if (dualPlanning) scheme.primary else scheme.onSurfaceVariant,
-                                        )
-                                    },
-                                    trailingIcon = {
-                                        if (dualPlanning) {
-                                            Icon(Icons.Filled.Check, contentDescription = uiContext.getString(R.string.settings_headers_enabled), tint = scheme.primary)
-                                        }
-                                    },
-                                    onClick = {
-                                        menu = false
-                                        onToggleDualPlanning()
-                                    },
-                                )
                             }
                             DropdownMenuItem(
                                 text = { Text(uiContext.getString(R.string.ui_thinking_152, (localizedThinkingOption(thinkingResolved?.label ?: thinkingLevel.label)).toString())) },
@@ -316,24 +272,12 @@ internal fun MainHeader(
                                 enabled = onFind != null,
                                 onClick = { menu = false; onFind?.invoke() },
                             )
-                            DropdownMenuItem(
-                                text = { Text(uiContext.getString(R.string.ui_context_limits)) },
-                                leadingIcon = {
-                                    Icon(Icons.Outlined.QueryStats, contentDescription = null)
-                                },
-                                onClick = { menu = false; onOpenContext() },
-                            )
                             if (!conversation.isChat) {
                                 HorizontalDivider(Modifier.padding(vertical = 6.dp))
                                 DropdownMenuItem(
                                     text = { Text(uiContext.getString(R.string.ui_terminal)) },
                                     leadingIcon = { Icon(Icons.Outlined.Terminal, contentDescription = null) },
                                     onClick = { menu = false; onOpenTerminal() },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(uiContext.getString(R.string.ui_web_preview_localhost)) },
-                                    leadingIcon = { Icon(Icons.Outlined.Language, contentDescription = null) },
-                                    onClick = { menu = false; onOpenWebPreview() },
                                 )
                                 DropdownMenuItem(
                                     text = { Text(uiContext.getString(R.string.ui_undo_file_changes)) },

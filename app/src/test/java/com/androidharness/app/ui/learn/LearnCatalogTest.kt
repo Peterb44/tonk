@@ -23,7 +23,8 @@ class LearnCatalogTest {
         assertEquals(SettingsPage.entries.toSet() - SettingsPage.LEARN, pages)
         val screens = actions.filter { it.kind == "screen" }.map { LearnDestination.valueOf(it.target) }.toSet()
         assertEquals(LearnDestination.entries.toSet(), screens)
-        assertEquals(SettingsPage.LEARN, settingsHomePages.first())
+        // The Learn destination is opened by its deep link, not listed as a normal settings-home page.
+        assertFalse(SettingsPage.LEARN in settingsHomePages)
         assertEquals(SettingsPage.LEARN, settingsDeepLink("learn"))
     }
 

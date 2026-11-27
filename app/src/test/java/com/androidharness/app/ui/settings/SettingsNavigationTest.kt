@@ -49,7 +49,15 @@ class SettingsNavigationTest {
     @Test
     fun `empty search keeps the normal primary settings home`() {
         val home = settingsHomePages
-        assertEquals(SettingsPage.entries.filter { it.onHome && it !in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.RUMBLE, SettingsPage.PRIVACY) }.toSet(), home.toSet())
+        val excludedHomePages = setOf(
+            SettingsPage.STORAGE, SettingsPage.SYNC, SettingsPage.FTP_SERVER,
+            SettingsPage.USAGE, SettingsPage.PROVIDER_DEBUG, SettingsPage.SETUP,
+            SettingsPage.UPDATES, SettingsPage.ABOUT, SettingsPage.LEARN,
+            SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE,
+            SettingsPage.LIVE_MODE, SettingsPage.CONNECTED_ACCOUNTS,
+            SettingsPage.RUMBLE, SettingsPage.PRIVACY,
+        )
+        assertEquals(SettingsPage.entries.filter { it.onHome && it !in excludedHomePages }.toSet(), home.toSet())
         assertEquals(home.size, home.toSet().size)
         assertFalse(SettingsPage.LEARN in matchingSettingsPages("learn tutorial guide", settingsTestStrings()))
         assertFalse(SettingsPage.ASSISTANT in matchingSettingsPages("digital assistant over other apps", settingsTestStrings()))
@@ -59,6 +67,11 @@ class SettingsNavigationTest {
         assertFalse(SettingsPage.CONNECTED_ACCOUNTS in matchingSettingsPages("connected accounts chatgpt", settingsTestStrings()))
         assertFalse(SettingsPage.RUMBLE in matchingSettingsPages("AH Rumble vibration haptics", settingsTestStrings()))
         assertFalse(SettingsPage.PRIVACY in matchingSettingsPages("privacy security fingerprint", settingsTestStrings()))
+        for (page in listOf(SettingsPage.STORAGE, SettingsPage.SYNC, SettingsPage.FTP_SERVER,
+            SettingsPage.USAGE, SettingsPage.PROVIDER_DEBUG, SettingsPage.SETUP,
+            SettingsPage.UPDATES, SettingsPage.ABOUT)) {
+            assertFalse("$page must stay hidden from search", page in matchingSettingsPages(page.keywords, settingsTestStrings()))
+        }
         val entries = matchingSettingsEntries("", settingsTestStrings())
         assertEquals(home.size, entries.size)
         assertTrue(entries.all { it.primary })
@@ -87,9 +100,9 @@ class SettingsNavigationTest {
             displayGroups.getValue(R.string.settings_group_integrations).map { it.page })
         assertEquals(listOf(SettingsPage.APPEARANCE, SettingsPage.LANGUAGE),
             displayGroups.getValue(R.string.settings_group_look_feel).map { it.page })
-        assertEquals(listOf(SettingsPage.BACKGROUND, SettingsPage.STORAGE),
+        assertEquals(listOf(SettingsPage.BACKGROUND),
             displayGroups.getValue(R.string.settings_group_device_privacy).map { it.page })
-        assertEquals(SettingsPage.ABOUT, displayGroups.getValue(R.string.settings_group_help_about).last().page)
+        assertEquals(SettingsPage.TROUBLESHOOTING, displayGroups.getValue(R.string.settings_group_help_about).last().page)
         // Each group is one contiguous run of the home list, so no group is split in two.
         assertEquals(settingsHomePages, displayGroups.values.flatten().map { it.page })
         assertEquals(SettingsPage.LANGUAGE, settingsDeepLink("language"))

@@ -257,11 +257,12 @@ class LocalizationResourcesTest {
         }
     }
 
-    @Test fun androidLanguageListDeclaresAllSupportedLanguages() {
+    @Test fun androidLanguageListDeclaresOnlyEnglishAndArabic() {
         val locales = DocumentBuilderFactory.newInstance().newDocumentBuilder()
             .parse(File("src/main/res/xml/locales_config.xml")).getElementsByTagName("locale")
         val tags = (0 until locales.length).map { (locales.item(it) as Element).getAttribute("android:name") }
-        assertTrue(tags.containsAll(listOf("en", "zh-CN", "ru", "ar", "fa", "pt-BR", "de", "es", "ja", "id", "si", "vi", "tr", "ms", "th", "fr", "hi", "ko", "ta", "bn", "fil", "zh-Hant")))
+        assertEquals(setOf("en", "ar"), tags.toSet())
+        assertEquals(2, tags.size)
     }
 
     @Test fun brazilianPortugueseCoversEveryUiResourceInItsOriginalGroup() = assertUiResourceCoverage("values-pt-rBR")
