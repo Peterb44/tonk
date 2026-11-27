@@ -41,8 +41,7 @@ jobs:
           find "$ANDROID_HOME/cmdline-tools" -maxdepth 4 -type f -name sdkmanager -print
           SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager -print -quit)"
           test -n "$SDKMANAGER"
-          bash "$SDKMANAGER" --licenses </dev/null || true
-          yes | bash "$SDKMANAGER" --licenses
+          yes | bash "$SDKMANAGER" --licenses || true
           bash "$SDKMANAGER" "platform-tools" "platforms;android-37" "build-tools;37.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
 
       - name: Set up Gradle
