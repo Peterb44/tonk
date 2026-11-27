@@ -356,9 +356,21 @@ private val searchableSettingsEntries = SettingsPage.entries
     .map { page -> SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true) }
 
 /** Exclude only pages explicitly removed from Settings home and search. */
+private val nonSearchableSettingsPages = hiddenSettingsPages + setOf(
+    SettingsPage.LEARN,
+    SettingsPage.ASSISTANT,
+    SettingsPage.LOCAL_MODELS,
+    SettingsPage.VOICE,
+    SettingsPage.LIVE_MODE,
+    SettingsPage.CONNECTED_ACCOUNTS,
+    SettingsPage.RUMBLE,
+    SettingsPage.PRIVACY,
+)
+
+/** Keep internal controls for hidden pages out of search as well as their page entries. */
 internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
-    searchableSettingsEntries.filterNot { it.page in hiddenSettingsPages } +
-        settingsControlEntries.filterNot { it.page in hiddenSettingsPages }
+    searchableSettingsEntries.filterNot { it.page in nonSearchableSettingsPages } +
+        settingsControlEntries.filterNot { it.page in nonSearchableSettingsPages }
 }
 
 /**
