@@ -2,6 +2,7 @@ package com.androidharness.app.llm
 
 import java.net.InetAddress
 import java.net.ServerSocket
+import java.net.SocketException
 import kotlin.concurrent.thread
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -27,14 +28,19 @@ class SseStreamTest {
                     accepted.complete(socket)
                     val input = socket.getInputStream().bufferedReader()
                     while (!input.readLine().isNullOrEmpty()) { }
-                    if (phase > 0) {
-                        socket.getOutputStream().apply {
-                            write("HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nContent-Length: 100000\r\n\r\n".toByteArray())
-                            if (phase == 2) write("data: {\"partial\":".toByteArray())
-                            flush()
+                    try {
+                        if (phase > 0) {
+                            socket.getOutputStream().apply {
+                                write("HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nContent-Length: 100000\r\n\r\n".toByteArray())
+                                if (phase == 2) write("data: {\"partial\":".toByteArray())
+                                flush()
+                            }
                         }
+                    } catch (_: SocketException) {
+                        // The test intentionally cancels the client while this socket is active.
+                    } finally {
+                        ready.complete(Unit)
                     }
-                    ready.complete(Unit)
                 }
                 val job = launch(Dispatchers.Default) {
                     ProviderFactory.sseJson(Request.Builder().url("http://127.0.0.1:${server.localPort}/").build()).collect { }
