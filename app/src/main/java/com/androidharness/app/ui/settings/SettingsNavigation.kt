@@ -25,6 +25,19 @@ internal enum class SettingsPage(
     /** False for pages that live inside a hub page (Coding) instead of the settings home. */
     val onHome: Boolean = true,
 ) {
+    LEARN(
+        R.string.learn_title, R.string.learn_description, R.string.learn_group,
+        "learn tutorial guide help study getting started how to android harness features instructions",
+        onHome = false,
+    ),
+    ASSISTANT(
+        R.string.assistant_settings_title,
+        R.string.assistant_settings_page_desc,
+        R.string.assistant_settings_group,
+        "digital assistant app default assistant overlay floating panel over other apps long press power home button corner swipe " +
+            "screen read screenshot ask about screen assist anywhere",
+        onHome = false,
+    ),
     LANGUAGE(
         R.string.settings_page_language_title,
         R.string.settings_page_language_desc,
