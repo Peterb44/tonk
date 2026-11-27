@@ -89,7 +89,7 @@ class SettingsNavigationTest {
         val displayGroups = settingsDisplayGroups(matchingSettingsEntries("", settingsTestStrings()))
         assertEquals(listOf(R.string.settings_group_ai_models, R.string.settings_group_your_assistant,
             R.string.settings_group_integrations, R.string.settings_group_look_feel, R.string.settings_group_device_privacy,
-            R.string.settings_group_data_sync, R.string.settings_group_help_about), displayGroups.keys.toList())
+            R.string.settings_group_help_about), displayGroups.keys.toList())
         assertFalse(displayGroups.values.flatten().any { it.page == SettingsPage.LEARN || it.page == SettingsPage.ASSISTANT })
         assertEquals(SettingsPage.ASSISTANT, settingsDeepLink("assistant"))
         assertEquals(listOf(SettingsPage.MODELS, SettingsPage.NINE_ROUTER),
