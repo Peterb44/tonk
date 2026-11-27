@@ -49,8 +49,10 @@ class SettingsNavigationTest {
     @Test
     fun `empty search keeps the normal primary settings home`() {
         val home = settingsHomePages
-        assertEquals(SettingsPage.entries.filter { it.onHome }.toSet(), home.toSet())
+        assertEquals(SettingsPage.entries.filter { it.onHome && it != SettingsPage.LEARN && it != SettingsPage.ASSISTANT }.toSet(), home.toSet())
         assertEquals(home.size, home.toSet().size)
+        assertFalse(SettingsPage.LEARN in matchingSettingsPages("learn tutorial guide", settingsTestStrings()))
+        assertFalse(SettingsPage.ASSISTANT in matchingSettingsPages("digital assistant over other apps", settingsTestStrings()))
         val entries = matchingSettingsEntries("", settingsTestStrings())
         assertEquals(home.size, entries.size)
         assertTrue(entries.all { it.primary })
@@ -66,10 +68,10 @@ class SettingsNavigationTest {
     @Test
     fun `home groups run from setup to help in a fixed order`() {
         val displayGroups = settingsDisplayGroups(matchingSettingsEntries("", settingsTestStrings()))
-        assertEquals(listOf(R.string.learn_group, R.string.assistant_settings_group, R.string.settings_group_ai_models, R.string.settings_group_your_assistant,
+        assertEquals(listOf(R.string.settings_group_ai_models, R.string.settings_group_your_assistant,
             R.string.settings_group_integrations, R.string.settings_group_look_feel, R.string.settings_group_device_privacy,
             R.string.settings_group_data_sync, R.string.settings_group_help_about), displayGroups.keys.toList())
-        assertEquals(listOf(SettingsPage.ASSISTANT), displayGroups.getValue(R.string.assistant_settings_group).map { it.page })
+        assertFalse(displayGroups.values.flatten().any { it.page == SettingsPage.LEARN || it.page == SettingsPage.ASSISTANT })
         assertEquals(SettingsPage.ASSISTANT, settingsDeepLink("assistant"))
         assertEquals(listOf(SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.LOCAL_MODELS, SettingsPage.NINE_ROUTER),
             displayGroups.getValue(R.string.settings_group_ai_models).map { it.page })
@@ -99,7 +101,8 @@ class SettingsNavigationTest {
             assertEquals(R.string.settings_group_coding, page.group)
             assertTrue(page in matchingSettingsPages(page.keywords.substringBefore(' '), settingsTestStrings()))
         }
-        assertEquals(settingsCodingPages.toSet(), SettingsPage.entries.filter { !it.onHome }.toSet())
+        assertEquals(settingsCodingPages.toSet() + setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT),
+            SettingsPage.entries.filter { !it.onHome }.toSet())
         assertEquals(settingsCodingPages.size, settingsCodingPages.toSet().size)
         for (page in listOf(SettingsPage.MCP, SettingsPage.TELEGRAM, SettingsPage.GITHUB, SettingsPage.SEARCH)) {
             assertTrue(page.onHome)
