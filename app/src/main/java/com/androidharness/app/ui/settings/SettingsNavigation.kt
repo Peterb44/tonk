@@ -319,6 +319,8 @@ private val hiddenSettingsPages = setOf(
     SettingsPage.USAGE,
     SettingsPage.PROVIDER_DEBUG,
     SettingsPage.SETUP,
+    SettingsPage.UPDATES,
+    SettingsPage.ABOUT,
 )
 
 internal val settingsHomePages = listOf(
