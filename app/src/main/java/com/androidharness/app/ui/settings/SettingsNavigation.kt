@@ -330,8 +330,8 @@ internal val settingsHomePages = listOf(
     SettingsPage.APPEARANCE, SettingsPage.LANGUAGE,
     SettingsPage.BACKGROUND,
     SettingsPage.BACKUP,
-    SettingsPage.TROUBLESHOOTING, SettingsPage.UPDATES, SettingsPage.ABOUT,
-)
+    SettingsPage.TROUBLESHOOTING,
+).filterNot { it in hiddenSettingsPages }
 
 /** Results grouped under their page's group, in the order the groups first appear. */
 internal fun settingsDisplayGroups(entries: List<SettingsSearchEntry>) =
@@ -369,8 +369,8 @@ private val excludedSearchPages = hiddenSettingsPages + setOf(
 
 /** Every searchable entry: exclude hidden pages and their nested controls together. */
 internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
-    searchableSettingsEntries.filterNot { it.page in excludedSearchPages } +
-        settingsControlEntries.filterNot { it.page in excludedSearchPages }
+    searchableSettingsEntries.filterNot { it.page in hiddenSettingsPages } +
+        settingsControlEntries.filterNot { it.page in hiddenSettingsPages }
 }
 
 /**
