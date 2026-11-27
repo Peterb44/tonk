@@ -67,6 +67,7 @@ internal enum class SettingsPage(
         R.string.settings_page_rumble_desc,
         R.string.settings_group_look_feel,
         "ah rumble haptics haptic vibration vibrate buzz feedback pulse motor tool calls thinking strength smooth crisp engine pattern",
+        onHome = false,
     ),
     GITHUB(
         R.string.settings_page_github_title,
@@ -79,6 +80,7 @@ internal enum class SettingsPage(
         R.string.settings_page_accounts_desc,
         R.string.settings_group_ai_models,
         "chatgpt codex subscription sign in login account plan oauth",
+        onHome = false,
     ),
     NINE_ROUTER(
         R.string.nine_router_title,
@@ -178,6 +180,7 @@ internal enum class SettingsPage(
         R.string.settings_page_privacy_desc,
         R.string.settings_group_device_privacy,
         "fingerprint pin authentication screenshots",
+        onHome = false,
     ),
     SEARCH(
         R.string.settings_page_search_title,
@@ -307,11 +310,11 @@ internal data class SettingsSearchEntry(
  * data and help pages, which most people open rarely.
  */
 internal val settingsHomePages = listOf(
-    SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.NINE_ROUTER,
+    SettingsPage.MODELS, SettingsPage.NINE_ROUTER,
     SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY,
     SettingsPage.SEARCH, SettingsPage.MCP, SettingsPage.GITHUB, SettingsPage.TELEGRAM,
-    SettingsPage.APPEARANCE, SettingsPage.LANGUAGE, SettingsPage.RUMBLE,
-    SettingsPage.PRIVACY, SettingsPage.BACKGROUND, SettingsPage.STORAGE,
+    SettingsPage.APPEARANCE, SettingsPage.LANGUAGE,
+    SettingsPage.BACKGROUND, SettingsPage.STORAGE,
     SettingsPage.BACKUP, SettingsPage.SYNC, SettingsPage.FTP_SERVER, SettingsPage.USAGE,
     SettingsPage.TROUBLESHOOTING, SettingsPage.PROVIDER_DEBUG, SettingsPage.SETUP, SettingsPage.UPDATES, SettingsPage.ABOUT,
 )
@@ -335,7 +338,7 @@ private val homeSettingsEntries = settingsHomePages.map { page ->
 
 /** All pages stay searchable, including the ones reached through the Coding hub. */
 private val searchableSettingsEntries = SettingsPage.entries
-    .filterNot { it in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE) }
+    .filterNot { it in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.RUMBLE, SettingsPage.PRIVACY) }
     .map { page -> SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true) }
 
 /** Every searchable entry: each page, then each setting inside one. */
@@ -440,7 +443,6 @@ internal fun settingsDeepLink(target: String): SettingsPage? = when (target) {
     "troubleshooting" -> SettingsPage.TROUBLESHOOTING
     "provider-debug", "provider-log" -> SettingsPage.PROVIDER_DEBUG
     "github" -> SettingsPage.GITHUB
-    "chatgpt" -> SettingsPage.CONNECTED_ACCOUNTS
     "planning" -> SettingsPage.MODELS
     "voice" -> SettingsPage.VOICE
     "live", "live-mode" -> SettingsPage.LIVE_MODE
