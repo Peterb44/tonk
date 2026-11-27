@@ -47,6 +47,13 @@ jobs:
             ln -s android-37.0 "$ANDROID_HOME/platforms/android-37"
           fi
 
+      - name: Install host GLSL compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y glslc
+          command -v glslc
+          glslc --version
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
