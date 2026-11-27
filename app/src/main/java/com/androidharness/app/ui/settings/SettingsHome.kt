@@ -54,7 +54,6 @@ internal fun SettingsHome(
     state: LazyListState = rememberLazyListState(),
     customSections: List<com.androidharness.app.data.CustomSettingsSection> = emptyList(),
     onOpenSection: (String) -> Unit = {},
-    onAddSection: () -> Unit = {},
 ) {
     val colors = MaterialTheme.colorScheme
     val context = LocalContext.current
@@ -70,9 +69,6 @@ internal fun SettingsHome(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        if (query.isBlank()) item(key = "learn") {
-            com.androidharness.app.ui.learn.LearnEntryCard(onClick = { onOpen(SettingsPage.LEARN, null) }, modifier = Modifier.settingsEntrance(0))
-        }
         item(key = "search") {
             OutlinedTextField(
                 value = query,
@@ -93,18 +89,6 @@ internal fun SettingsHome(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-        }
-        // Same footprint as the search field above it, so the two read as a pair.
-        if (query.isBlank()) item(key = "add-section") {
-            FilledTonalButton(
-                onClick = onAddSection,
-                colors = ButtonDefaults.filledTonalButtonColors(containerColor = colors.primaryContainer, contentColor = colors.onPrimaryContainer),
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-            ) {
-                Icon(Icons.Rounded.Add, null, Modifier.size(22.dp))
-                Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.custom_sections_add), style = MaterialTheme.typography.titleMedium)
-            }
         }
         if (sections.isNotEmpty()) item(key = "custom-sections") { CustomSectionsHomeGroup(sections, onOpenSection) }
         if (results.isEmpty() && sections.isEmpty()) item(key = "empty") {
@@ -168,7 +152,6 @@ internal fun DesktopSettingsNavigation(
     customSections: List<com.androidharness.app.data.CustomSettingsSection> = emptyList(),
     selectedSection: String? = null,
     onOpenSection: (String) -> Unit = {},
-    onAddSection: () -> Unit = {},
 ) {
     val scheme = MaterialTheme.colorScheme
     val context = LocalContext.current
@@ -176,9 +159,6 @@ internal fun DesktopSettingsNavigation(
     val results = remember(query, index) { index.search(query) }
     Surface(modifier, color = scheme.surfaceContainerLow, contentColor = scheme.onSurface) {
         Column(Modifier.fillMaxSize().semantics { contentDescription = context.getString(R.string.settings_search_categories) }) {
-            com.androidharness.app.ui.learn.LearnEntryCard(
-                onClick = { onOpen(SettingsPage.LEARN, null) }, compact = true, modifier = Modifier.padding(12.dp),
-            )
             OutlinedTextField(query, onQueryChange, singleLine = true,
                 placeholder = { Text(stringResource(R.string.settings_search_placeholder), style = MaterialTheme.typography.bodySmall) },
                 leadingIcon = { Icon(Icons.Rounded.Search, null, Modifier.size(18.dp)) },
@@ -194,9 +174,6 @@ internal fun DesktopSettingsNavigation(
                     Row(Modifier.padding(start = 12.dp, top = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                         Text(stringResource(R.string.custom_sections_group), Modifier.weight(1f),
                             style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
-                        IconButton(onClick = onAddSection) {
-                            Icon(Icons.Rounded.Add, stringResource(R.string.custom_sections_add), Modifier.size(18.dp))
-                        }
                     }
                 }
                 items(sections, key = { "custom-section:${it.id}" }) { section ->
