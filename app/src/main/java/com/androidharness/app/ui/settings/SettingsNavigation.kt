@@ -356,8 +356,21 @@ private val searchableSettingsEntries = SettingsPage.entries
     .map { page -> SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true) }
 
 /** Every searchable entry: each page, then each setting inside one. */
+private val excludedSearchPages = hiddenSettingsPages + setOf(
+    SettingsPage.LEARN,
+    SettingsPage.ASSISTANT,
+    SettingsPage.LOCAL_MODELS,
+    SettingsPage.VOICE,
+    SettingsPage.LIVE_MODE,
+    SettingsPage.CONNECTED_ACCOUNTS,
+    SettingsPage.RUMBLE,
+    SettingsPage.PRIVACY,
+)
+
+/** Every searchable entry: exclude hidden pages and their nested controls together. */
 internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
-    searchableSettingsEntries + settingsControlEntries.filterNot { it.page in hiddenSettingsPages }
+    searchableSettingsEntries.filterNot { it.page in excludedSearchPages } +
+        settingsControlEntries.filterNot { it.page in excludedSearchPages }
 }
 
 /**
