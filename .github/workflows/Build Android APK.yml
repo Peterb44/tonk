@@ -42,7 +42,7 @@ jobs:
           SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager -print -quit)"
           test -n "$SDKMANAGER"
           yes | bash "$SDKMANAGER" --licenses || true
-          bash "$SDKMANAGER" "platform-tools" "platforms;android-37" "build-tools;37.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
+          bash "$SDKMANAGER" --channel=3 "platform-tools" "platforms;android-37" "build-tools;37.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
