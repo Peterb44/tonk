@@ -104,6 +104,7 @@ internal enum class SettingsPage(
         R.string.settings_page_local_models_desc,
         R.string.settings_group_ai_models,
         "offline hugging face gguf safetensors llama ram memory storage cpu download uninstall context input output vision images threads",
+        onHome = false,
     ),
     PLUGINS(
         R.string.pm_title, R.string.pm_description, R.string.settings_group_coding,
@@ -150,12 +151,14 @@ internal enum class SettingsPage(
         R.string.settings_page_voice_desc,
         R.string.settings_group_your_assistant,
         "microphone groq whisper transcription speech tts text to speech read aloud voice output",
+        onHome = false,
     ),
     LIVE_MODE(
         R.string.live_title,
         R.string.settings_page_live_desc,
         R.string.settings_group_your_assistant,
         "live mode hands free voice conversation talk planning experimental realtime spoken",
+        onHome = false,
     ),
     SKILLS(
         R.string.settings_page_skills_title,
@@ -304,8 +307,8 @@ internal data class SettingsSearchEntry(
  * data and help pages, which most people open rarely.
  */
 internal val settingsHomePages = listOf(
-    SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.LOCAL_MODELS, SettingsPage.NINE_ROUTER,
-    SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY, SettingsPage.VOICE, SettingsPage.LIVE_MODE,
+    SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.NINE_ROUTER,
+    SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY,
     SettingsPage.SEARCH, SettingsPage.MCP, SettingsPage.GITHUB, SettingsPage.TELEGRAM,
     SettingsPage.APPEARANCE, SettingsPage.LANGUAGE, SettingsPage.RUMBLE,
     SettingsPage.PRIVACY, SettingsPage.BACKGROUND, SettingsPage.STORAGE,
@@ -332,7 +335,7 @@ private val homeSettingsEntries = settingsHomePages.map { page ->
 
 /** All pages stay searchable, including the ones reached through the Coding hub. */
 private val searchableSettingsEntries = SettingsPage.entries
-    .filterNot { it == SettingsPage.LEARN || it == SettingsPage.ASSISTANT }
+    .filterNot { it in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE) }
     .map { page -> SettingsSearchEntry(page.title, page.description, page, page.keywords, primary = true) }
 
 /** Every searchable entry: each page, then each setting inside one. */
