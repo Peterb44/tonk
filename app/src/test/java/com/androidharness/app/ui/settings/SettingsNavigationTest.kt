@@ -49,10 +49,13 @@ class SettingsNavigationTest {
     @Test
     fun `empty search keeps the normal primary settings home`() {
         val home = settingsHomePages
-        assertEquals(SettingsPage.entries.filter { it.onHome && it != SettingsPage.LEARN && it != SettingsPage.ASSISTANT }.toSet(), home.toSet())
+        assertEquals(SettingsPage.entries.filter { it.onHome && it !in setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE) }.toSet(), home.toSet())
         assertEquals(home.size, home.toSet().size)
         assertFalse(SettingsPage.LEARN in matchingSettingsPages("learn tutorial guide", settingsTestStrings()))
         assertFalse(SettingsPage.ASSISTANT in matchingSettingsPages("digital assistant over other apps", settingsTestStrings()))
+        assertFalse(SettingsPage.LOCAL_MODELS in matchingSettingsPages("offline local models gguf", settingsTestStrings()))
+        assertFalse(SettingsPage.VOICE in matchingSettingsPages("microphone speech transcription", settingsTestStrings()))
+        assertFalse(SettingsPage.LIVE_MODE in matchingSettingsPages("live mode hands free voice", settingsTestStrings()))
         val entries = matchingSettingsEntries("", settingsTestStrings())
         assertEquals(home.size, entries.size)
         assertTrue(entries.all { it.primary })
@@ -73,9 +76,9 @@ class SettingsNavigationTest {
             R.string.settings_group_data_sync, R.string.settings_group_help_about), displayGroups.keys.toList())
         assertFalse(displayGroups.values.flatten().any { it.page == SettingsPage.LEARN || it.page == SettingsPage.ASSISTANT })
         assertEquals(SettingsPage.ASSISTANT, settingsDeepLink("assistant"))
-        assertEquals(listOf(SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.LOCAL_MODELS, SettingsPage.NINE_ROUTER),
+        assertEquals(listOf(SettingsPage.MODELS, SettingsPage.CONNECTED_ACCOUNTS, SettingsPage.NINE_ROUTER),
             displayGroups.getValue(R.string.settings_group_ai_models).map { it.page })
-        assertEquals(listOf(SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY, SettingsPage.VOICE, SettingsPage.LIVE_MODE),
+        assertEquals(listOf(SettingsPage.CHAT_OPTIONS, SettingsPage.CODING, SettingsPage.MEMORY),
             displayGroups.getValue(R.string.settings_group_your_assistant).map { it.page })
         assertEquals(listOf(SettingsPage.SEARCH, SettingsPage.MCP, SettingsPage.GITHUB, SettingsPage.TELEGRAM),
             displayGroups.getValue(R.string.settings_group_integrations).map { it.page })
@@ -101,7 +104,7 @@ class SettingsNavigationTest {
             assertEquals(R.string.settings_group_coding, page.group)
             assertTrue(page in matchingSettingsPages(page.keywords.substringBefore(' '), settingsTestStrings()))
         }
-        assertEquals(settingsCodingPages.toSet() + setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT),
+        assertEquals(settingsCodingPages.toSet() + setOf(SettingsPage.LEARN, SettingsPage.ASSISTANT, SettingsPage.LOCAL_MODELS, SettingsPage.VOICE, SettingsPage.LIVE_MODE),
             SettingsPage.entries.filter { !it.onHome }.toSet())
         assertEquals(settingsCodingPages.size, settingsCodingPages.toSet().size)
         for (page in listOf(SettingsPage.MCP, SettingsPage.TELEGRAM, SettingsPage.GITHUB, SettingsPage.SEARCH)) {
