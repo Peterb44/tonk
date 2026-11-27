@@ -370,9 +370,13 @@ private val nonSearchableSettingsPages = hiddenSettingsPages + setOf(
 /** Keep internal controls for hidden pages out of search as well as their page entries. */
 internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
     searchableSettingsEntries.filterNot { it.page in nonSearchableSettingsPages } +
-        // Keep individual controls searchable even when their containing page is hidden.
-        // This preserves useful deep links such as Whisper, vibration and auto-lock settings.
-        settingsControlEntries
+        // Keep selected controls searchable without exposing their hidden settings pages.
+        settingsControlEntries.filter {
+            it.page !in nonSearchableSettingsPages ||
+                it.page == SettingsPage.RUMBLE ||
+                it.page == SettingsPage.VOICE ||
+                (it.page == SettingsPage.PRIVACY && it.anchor == R.string.settings_search_autolock_title)
+        }
 }
 
 /**
