@@ -271,7 +271,6 @@ private fun SettingsScreenContent(
     var customPath by rememberSaveable { mutableStateOf(listOf<String>()) }
     // The section a page shortcut was opened from, so Back returns to it.
     var customReturn by rememberSaveable { mutableStateOf(listOf<String>()) }
-    var creatingSection by rememberSaveable { mutableStateOf(false) }
     val customSection = com.androidharness.app.data.CustomSettingsSections.find(settings.customSections, customPath)
     fun goBack() {
         when {
@@ -324,24 +323,6 @@ private fun SettingsScreenContent(
         openPage(destination, anchor)
         if (destination !in setOf(SettingsPage.SKILLS, SettingsPage.USAGE, SettingsPage.SETUP)) customReturn = from
     }
-    fun startNewSection() {
-        if (settings.customSections.size < com.androidharness.app.data.CustomSettingsSections.MAX_SECTIONS) creatingSection = true
-        else android.widget.Toast.makeText(uiContext, uiContext.getString(R.string.custom_sections_limit,
-            com.androidharness.app.data.CustomSettingsSections.MAX_SECTIONS), android.widget.Toast.LENGTH_LONG).show()
-    }
-    if (creatingSection) CustomSectionEditorDialog(
-        title = stringResource(R.string.custom_sections_add), confirm = stringResource(R.string.custom_sections_create),
-        onDismiss = { creatingSection = false },
-        onSave = { name, icon ->
-            creatingSection = false
-            val created = com.androidharness.app.data.CustomSettingsSection(java.util.UUID.randomUUID().toString(), name, icon)
-            scope.launch {
-                container.settings.updateCustomSections { it + created }
-                customReturn = emptyList()
-                customPath = listOf(created.id)
-            }
-        },
-    )
 
     val folderPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocumentTree(),
@@ -365,7 +346,7 @@ private fun SettingsScreenContent(
                 DesktopSettingsNavigation(page.takeIf { customSection == null }, query, { query = it }, ::openPage,
                     Modifier.width(240.dp).fillMaxHeight(), customSections = settings.customSections,
                     selectedSection = customPath.firstOrNull()?.takeIf { customSection != null },
-                    onOpenSection = { customReturn = emptyList(); customPath = listOf(it) }, onAddSection = ::startNewSection)
+                    onOpenSection = { customReturn = emptyList(); customPath = listOf(it) })
                 VerticalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             }
             val destination = SettingsDestination(customPath.takeIf { customSection != null }, page).apply {
@@ -433,7 +414,6 @@ private fun SettingsScreenContent(
                 state = homeList,
                 customSections = settings.customSections,
                 onOpenSection = { customReturn = emptyList(); customPath = listOf(it) },
-                onAddSection = ::startNewSection,
             )
         } else {
             key(page) {
