@@ -26,9 +26,9 @@ class SseStreamTest {
                 val sender = thread(isDaemon = true) {
                     val socket = server.accept()
                     accepted.complete(socket)
-                    val input = socket.getInputStream().bufferedReader()
-                    while (!input.readLine().isNullOrEmpty()) { }
                     try {
+                        val input = socket.getInputStream().bufferedReader()
+                        while (!input.readLine().isNullOrEmpty()) { }
                         if (phase > 0) {
                             socket.getOutputStream().apply {
                                 write("HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nContent-Length: 100000\r\n\r\n".toByteArray())
@@ -37,7 +37,7 @@ class SseStreamTest {
                             }
                         }
                     } catch (_: SocketException) {
-                        // The test intentionally cancels the client while this socket is active.
+                        // The client is expected to close the socket during cancellation.
                     } finally {
                         ready.complete(Unit)
                     }
