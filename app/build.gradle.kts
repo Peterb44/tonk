@@ -64,6 +64,8 @@ android {
         targetSdk = 36
         versionCode = 41
         versionName = "4.1"
+        // Ship only the two supported app languages; keep all other resources out of the APK.
+        resourceConfigurations += listOf("en", "ar")
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"$githubClientId\"")
         buildConfigField("boolean", "PLAY_DISTRIBUTION", (distributionChannel == "play").toString())
         if (hasNdk) {
