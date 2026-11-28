@@ -249,7 +249,7 @@ internal enum class SettingsPage(
     BACKUP(
         R.string.settings_page_backup_title,
         R.string.settings_page_backup_desc,
-        R.string.settings_group_data_sync,
+        R.string.settings_group_help_about,
         "restore history archive transfer password providers keys encryption",
     ),
     USAGE(
@@ -367,10 +367,19 @@ private val nonSearchableSettingsPages = hiddenSettingsPages + setOf(
     SettingsPage.PRIVACY,
 )
 
-/** Keep internal controls for hidden pages out of search as well as their page entries. */
+/** Keep hidden pages out of search while retaining their explicitly supported controls. */
+private val searchableHiddenPageControls = setOf(
+    SettingsPage.RUMBLE to R.string.rumble_title,
+    SettingsPage.VOICE to R.string.settings_anchor_whisper,
+    SettingsPage.PRIVACY to R.string.settings_search_autolock_title,
+)
+
 internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
     searchableSettingsEntries.filterNot { it.page in nonSearchableSettingsPages } +
-        settingsControlEntries.filterNot { it.page in nonSearchableSettingsPages }
+        settingsControlEntries.filter { entry ->
+            entry.page !in nonSearchableSettingsPages ||
+                (entry.page to entry.anchor) in searchableHiddenPageControls
+        }
 }
 
 /**
