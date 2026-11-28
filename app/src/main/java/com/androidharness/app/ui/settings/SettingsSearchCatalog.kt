@@ -38,7 +38,7 @@ internal val settingsControlEntries: List<SettingsSearchEntry> = listOfNotNull(
         "motion blur scroll scrolling smear camera pan movement speed appearance", anchor = R.string.motion_blur_title,
         minSdk = android.os.Build.VERSION_CODES.S),
     SettingsSearchEntry(R.string.rumble_title, R.string.rumble_desc, SettingsPage.RUMBLE,
-        "ah rumble haptics haptic vibration vibrate buzz feedback tool calls thinking motor on off",
+        "rumble",
         anchor = R.string.rumble_title, needsVibrator = true),
     SettingsSearchEntry(R.string.rumble_engine_title, R.string.rumble_engine_auto_desc, SettingsPage.RUMBLE,
         "rumble haptic engine system effects primitives android 11 waveform custom automatic", anchor = R.string.rumble_engine_title,
@@ -309,7 +309,7 @@ internal val settingsControlEntries: List<SettingsSearchEntry> = listOfNotNull(
         R.string.settings_search_whisper_title,
         R.string.settings_search_whisper_desc,
         SettingsPage.VOICE,
-        "groq voice transcription",
+        "whisper",
         anchor = R.string.settings_anchor_whisper,
     ),
     SettingsSearchEntry(
