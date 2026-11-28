@@ -378,7 +378,7 @@ internal val allSettingsEntries: List<SettingsSearchEntry> by lazy {
     searchableSettingsEntries.filterNot { it.page in nonSearchableSettingsPages } +
         settingsControlEntries.filter { entry ->
             entry.page !in nonSearchableSettingsPages ||
-                (entry.page to entry.anchor) in searchableHiddenPageControls
+                entry.anchor?.let { (entry.page to it) in searchableHiddenPageControls } == true
         }
 }
 
