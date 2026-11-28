@@ -4,6 +4,7 @@ import com.androidharness.app.core.ChatMessage
 import com.androidharness.app.core.ToolCallData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -295,7 +296,10 @@ object ProviderFactory {
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {
-                close(e)
+                // Cancelling the reader closes the socket; OkHttp/Okio may report
+                // that close as an IOException before cancellation reaches this catch.
+                // Do not turn an expected collector cancellation into a stream failure.
+                if (isActive) close(e)
             }
         }
         awaitClose {
